@@ -79,3 +79,6 @@ https://medium.com/front-end-weekly/js-buffers-matter-sometimes-56150a35417f
   https://snyk.io/blog/exploiting-buffer/
   Seems like recent versions are pretty safe.  I don't think we can do a buffer
   overflow when writing data.
+
+  Streams use internal buffers.  When they get to the highwater mark, they stop
+  reading so the buffer doesn't overflow.
