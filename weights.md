@@ -4,7 +4,6 @@
 10 Control flow (Async tasks, Callbacks) 10%
 9 Events 9%
 
-9 Buffer and Streams 9%
 7 File System 7%
 7 Error Handling 7%
 7 Child Processes (Basics, no IPC/fork) 7%
@@ -19,3 +18,6 @@
 3 CLI (-E, -R, etc) 3%
 
 https://github.com/nodejs-certified-developer/certification#the-topics
+
+# Reviewed
+9 Buffer and Streams 9%
