@@ -23,3 +23,7 @@ How to TDD Node?
   If the test requires the main app, will it be running as a server?
 
   If I use supertest, I don't have to start the server listening.
+
+Let's compare the blocking vs non-blocking reads.
+  https://nodejs.org/en/docs/guides/simple-profiling/
+  ab -r -k -c 200 -n 4800 "http://localhost:3333/hello.txt"

@@ -21,7 +21,13 @@ const requestListener = (req, res) => {
     return handleNotFound(res)
   }
 
-  return res.end(fs.readFileSync(`public/${req.url}`, 'utf8'))
+  // https://nodejs.org/dist/latest-v12.x/docs/api/fs.html#fs_fs_readfile_path_options_callback
+  // Try reading async instead.
+  const path = `public/${req.url}`
+  const options = { encoding: 'utf8' }
+  fs.readFile(path, options, (err, data) => {
+    return res.end(data)
+  })
 }
 const server = http.createServer(options, requestListener)
 
