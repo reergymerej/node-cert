@@ -13,21 +13,16 @@ const requestListener = (req, res) => {
   // https://nodejs.org/dist/latest-v12.x/docs/api/http.html#http_class_http_clientrequest
   // https://nodejs.org/dist/latest-v12.x/docs/api/http.html#http_class_http_incomingmessage
   // <http.IncomingMessage>
-
   // https://nodejs.org/dist/latest-v12.x/docs/api/http.html#http_class_http_serverresponse
   // <http.ServerResponse>
-  const isNotFound = req.url !== '/hello.txt'
-  if (isNotFound) {
-    return handleNotFound(res)
-  }
 
-  // https://nodejs.org/dist/latest-v12.x/docs/api/fs.html#fs_fs_readfile_path_options_callback
-  // Try reading async instead.
-  const path = `public/${req.url}`
+  // Let's try a stream instead.
+  // https://nodejs.org/dist/latest-v12.x/docs/api/fs.html#fs_fs_createreadstream_path_options
+  const path = `public${req.url}`
   const options = { encoding: 'utf8' }
-  fs.readFile(path, options, (err, data) => {
-    return res.end(data)
-  })
+  fs.createReadStream(path, options)
+    .on('error', (err) => handleNotFound(res))
+    .pipe(res)
 }
 const server = http.createServer(options, requestListener)
 

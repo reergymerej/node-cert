@@ -23,8 +23,8 @@ describe('when an invalid file is specified', () => {
 describe('when a valid file is specified', () => {
   it('should return the file', async () => {
     await request(app)
-      .get('/hello.txt')
+      .get('/wink.txt')
       .expect(200)
-      .expect(fs.readFileSync('public/hello.txt', 'utf8'))
+      .expect(fs.readFileSync('public/wink.txt', 'utf8'))
   })
 })
