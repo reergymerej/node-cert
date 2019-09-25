@@ -2,6 +2,7 @@ const fs = require('fs')
 const http = require('http')
 
 const handleNotFound = (res) => {
+  res.setHeader('wtf', 'try again')
   res.statusCode = 404
   res.end('')
 }
@@ -19,7 +20,7 @@ const requestListener = (req, res) => {
   // Let's try a stream instead.
   // https://nodejs.org/dist/latest-v12.x/docs/api/fs.html#fs_fs_createreadstream_path_options
   const path = `public${req.url}`
-  const options = { encoding: 'utf8' }
+  const options = {}
   fs.createReadStream(path, options)
     .on('error', (err) => handleNotFound(res))
     .pipe(res)
