@@ -33,17 +33,17 @@ const getIntEncoder = (series) => {
 
 const toBase62 = getIntEncoder(CHARS)
 
+const getDecoderReducerForSeries = (series) => (acc, value, i) => {
+  const positionFactor = Math.max(1, i * series.length)
+  return acc + (series.indexOf(value) * positionFactor)
+}
+
 const getSeriesDecoder = (series) => {
   const values = series.split('').reduce(reduceValueToKey, {})
-  return (string) => {
-    return string.split('')
-      .reverse()
-      .reduce((acc, value, i) => {
-        const positionFactor = Math.max(1, i * series.length)
-        const thisValue = series.indexOf(value) * positionFactor
-        return acc + thisValue
-      }, 0)
-  }
+  const reducer = getDecoderReducerForSeries(series)
+  return (string) => string.split('')
+    .reverse()
+    .reduce(reducer, 0)
 }
 
 module.exports = {
