@@ -1,4 +1,5 @@
 const id = require('./id')
+const CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 describe('id', () => {
   const cases = [
@@ -69,5 +70,39 @@ describe('getIntEncoder', () => {
     `('returns $expected for $int', ({ int, expected }) => {
       expect(encoder(int)).toBe(expected)
     })
+  })
+})
+
+describe('getSeriesDecoder', () => {
+  const decoder = id.getSeriesDecoder(CHARS)
+  const cases = [
+    [ 1, '1' ],
+    [ 10, 'a' ],
+    [ 11, 'b' ],
+    [ 36, 'A' ],
+    [ 61, 'Z' ],
+    [ 62, '10' ],
+    [ 63, '11' ],
+    [ 124, '20' ],
+    [ 125, '21' ],
+    [ 619, '9Z' ],
+    [ 620, 'a0' ],
+  ]
+
+  it.each(cases)('should convert to %d from %s', (expected, string) => {
+    expect(decoder(string)).toBe(expected)
+  })
+})
+
+describe('getSeriesDecoder hex', () => {
+  const decoder = id.getSeriesDecoder(CHARS.substr(0, 16))
+  const cases = [
+    [ 1, '1' ],
+    [ 10, 'a' ],
+    [ 17, '11' ],
+  ]
+
+  it.each(cases)('should convert to %d from %s', (expected, string) => {
+    expect(decoder(string)).toBe(expected)
   })
 })
