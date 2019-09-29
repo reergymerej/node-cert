@@ -22,16 +22,16 @@ describe('URL BLL', () => {
       })
     })
 
-    fdescribe('if it works', () => {
+    describe('if it works', () => {
       it('should return a url object', async () => {
         // arrange
-        const count = 10
+        const id = 10
         const url = 'http://foo.com'
         const urlObject = {
           url,
         }
         const urlDAO = {
-          saveNewUrl: jest.fn((obj) => ({ ...obj, count })),
+          saveNewUrl: jest.fn((obj) => ({ ...obj, id })),
         }
         const urlBll = getUrlBll(urlDAO, fromInt)
 
@@ -40,10 +40,12 @@ describe('URL BLL', () => {
 
         // assert
         // We convert the url into a nice object.
+        // Test that it calls the mock with the object.
         expect(urlDAO.saveNewUrl).toHaveBeenCalledWith(urlObject)
+        // Test that the result is the DAL response with the converted id.
         expect(result).toEqual({
           ...urlObject,
-          id: fromInt(count),
+          id: fromInt(id),
         })
       })
     })
@@ -72,13 +74,16 @@ describe('URL BLL', () => {
     describe('if it works', () => {
       it('should return a url object', async () => {
         // arrange
-        const id = 'bongo'
+        const int = 1200
+        const id = fromInt(int)
         const urlObject = {
-          id,
           url: 'http://boop.com',
         }
         const urlDAO = {
-          byId: jest.fn(() => urlObject),
+          byId: jest.fn(() => ({
+            ...urlObject,
+            id: int,
+          })),
         }
         const urlBll = getUrlBll(urlDAO, fromInt)
 
@@ -86,8 +91,13 @@ describe('URL BLL', () => {
         const result = await urlBll.find(id)
 
         // assert
-        expect(urlDAO.byId).toHaveBeenCalledWith(id)
-        expect(result).toEqual(urlObject)
+        // Test that it converted the id to an int.
+        expect(urlDAO.byId).toHaveBeenCalledWith(int)
+        // Test that the result was converted.
+        expect(result).toEqual({
+          ...urlObject,
+          id,
+        })
       })
     })
   })

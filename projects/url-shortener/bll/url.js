@@ -2,37 +2,36 @@ const saveError = new Error('Unable to save')
 const lookupError = new Error('Unable to find')
 
 const getResultConverter = (fromInt) => (result) => ({
-  id: fromInt(result.count),
+  id: fromInt(result.id),
   url: result.url,
 })
 
 module.exports = (urlDAO, fromInt) => {
-  const saveResultConverter = getResultConverter(fromInt)
+  const resultConverter = getResultConverter(fromInt)
   return {
     find: async (id) => {
-      const result = urlDAO.byId(id)
+      const int = 1200
+      const result = urlDAO.byId(int)
       const hasError = result instanceof Error
       return hasError
         ? lookupError
-        : result
+        : resultConverter(result)
     },
 
     saveNew: async (url) => {
-      let saveResult
+      let result
       try {
-        // TODO: Watch out for race conditions.
-        // const count = await urlDAO.getCount()
         const urlObject = {
           url,
         }
-        saveResult = await urlDAO.saveNewUrl(urlObject)
+        result = await urlDAO.saveNewUrl(urlObject)
       } catch (error) {
-        saveResult = error
+        result = error
       } finally {
-        const hasSaveError = saveResult instanceof Error
+        const hasSaveError = result instanceof Error
         return hasSaveError
           ? saveError
-          : saveResultConverter(saveResult)
+          : resultConverter(result)
       }
     },
   }
