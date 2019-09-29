@@ -13,6 +13,9 @@ const reduceValueToKey = (acc, value, i) => ({
 const getEncoderForSeries = (series) => {
   const values = series.split('').reduce(reduceKeyToValue, {})
   return function encoder(int) {
+    if (isNaN(int)) {
+      throw new Error(`Invalid int: ${int}`)
+    }
     const base = series.length
     if (int < base) {
       return values[int]

@@ -15,9 +15,14 @@ describe('id', () => {
     [ 619, '9Z' ],
     [ 620, 'a0' ],
   ]
-
   it.each(cases)('should convert %i to %s', (int, expected) => {
     expect(id.fromInt(int)).toBe(expected)
+  })
+
+  it('should throw for missing int', () => {
+    expect(() => {
+      id.fromInt()
+    }).toThrow('Invalid int')
   })
 })
 
@@ -88,7 +93,6 @@ describe('getSeriesDecoder', () => {
     [ 619, '9Z' ],
     [ 620, 'a0' ],
   ]
-
   it.each(cases)('should convert to %d from %s', (expected, string) => {
     expect(decoder(string)).toBe(expected)
   })
@@ -101,7 +105,6 @@ describe('getSeriesDecoder hex', () => {
     [ 10, 'a' ],
     [ 17, '11' ],
   ]
-
   it.each(cases)('should convert to %d from %s', (expected, string) => {
     expect(decoder(string)).toBe(expected)
   })

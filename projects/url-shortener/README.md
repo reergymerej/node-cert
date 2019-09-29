@@ -29,3 +29,6 @@ Business Logic Layer - speaks in generalizations
 Data Access Layer - knows how to build and run queries, data models
   insert into x, return id
   select from blah, return model
+
+  We don't have to store the converted id in the db.  Just store the int and the
+  BLL can do the translations for us.

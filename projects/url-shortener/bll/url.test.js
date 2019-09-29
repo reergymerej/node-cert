@@ -1,4 +1,5 @@
 const getUrlBll = require('./url')
+const { fromInt } = require('./id')
 
 describe('URL BLL', () => {
   describe('saving a url', () => {
@@ -7,10 +8,9 @@ describe('URL BLL', () => {
         // arrange
         const error = new Error('low level DAL error')
         const urlDAO = {
-          getNextId: () => {},
           saveNewUrl: jest.fn(() => error),
         }
-        const urlBll = getUrlBll(urlDAO)
+        const urlBll = getUrlBll(urlDAO, fromInt)
 
         // act
         const url = 'http://foo.com'
@@ -22,31 +22,28 @@ describe('URL BLL', () => {
       })
     })
 
-    describe('if it works', () => {
+    fdescribe('if it works', () => {
       it('should return a url object', async () => {
         // arrange
-        const _id = 'asdfqwerasdfzxc1234v'
-        const id = 'aa3'
+        const count = 10
         const url = 'http://foo.com'
         const urlObject = {
-          id,
           url,
         }
         const urlDAO = {
-          getNextId: jest.fn(async () => await id),
-          saveNewUrl: jest.fn(() => ({...urlObject, _id})),
+          saveNewUrl: jest.fn((obj) => ({ ...obj, count })),
         }
-        const urlBll = getUrlBll(urlDAO)
+        const urlBll = getUrlBll(urlDAO, fromInt)
 
         // act
         const result = await urlBll.saveNew(url)
 
         // assert
-        expect(urlDAO.getNextId).toHaveBeenCalled()
+        // We convert the url into a nice object.
         expect(urlDAO.saveNewUrl).toHaveBeenCalledWith(urlObject)
         expect(result).toEqual({
-          _id,
           ...urlObject,
+          id: fromInt(count),
         })
       })
     })
@@ -60,7 +57,7 @@ describe('URL BLL', () => {
         const urlDAO = {
           byId: jest.fn(() => error),
         }
-        const urlBll = getUrlBll(urlDAO)
+        const urlBll = getUrlBll(urlDAO, fromInt)
 
         // act
         const id = 'bongo'
@@ -83,7 +80,7 @@ describe('URL BLL', () => {
         const urlDAO = {
           byId: jest.fn(() => urlObject),
         }
-        const urlBll = getUrlBll(urlDAO)
+        const urlBll = getUrlBll(urlDAO, fromInt)
 
         // act
         const result = await urlBll.find(id)
