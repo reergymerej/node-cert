@@ -1,7 +1,7 @@
 const id = require('./id')
 const CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-describe('id', () => {
+describe('fromInt', () => {
   const cases = [
     [ 1, '1' ],
     [ 10, 'a' ],
@@ -15,8 +15,13 @@ describe('id', () => {
     [ 619, '9Z' ],
     [ 620, 'a0' ],
   ]
+
   it.each(cases)('should convert %i to %s', (int, expected) => {
     expect(id.fromInt(int)).toBe(expected)
+  })
+
+  it.each(cases)('should convert to %i from %s', (expected, string) => {
+    expect(id.toInt(string)).toBe(expected)
   })
 
   it('should throw for missing int', () => {

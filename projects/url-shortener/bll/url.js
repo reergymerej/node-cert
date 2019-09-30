@@ -6,11 +6,11 @@ const getResultConverter = (fromInt) => (result) => ({
   url: result.url,
 })
 
-module.exports = (urlDAO, fromInt) => {
+module.exports = ({ urlDAO, fromInt, toInt }) => {
   const resultConverter = getResultConverter(fromInt)
   return {
     find: async (id) => {
-      const int = 1200
+      const int = toInt(id)
       const result = urlDAO.byId(int)
       const hasError = result instanceof Error
       return hasError

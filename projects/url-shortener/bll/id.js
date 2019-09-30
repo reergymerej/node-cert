@@ -34,8 +34,6 @@ const getIntEncoder = (series) => {
   return encoder
 }
 
-const toBase62 = getIntEncoder(CHARS)
-
 const getDecoderReducerForSeries = (series) => (acc, value, i) => {
   const positionFactor = Math.max(1, i * series.length)
   return acc + (series.indexOf(value) * positionFactor)
@@ -49,8 +47,12 @@ const getSeriesDecoder = (series) => {
     .reduce(reducer, 0)
 }
 
+const toBase62 = getIntEncoder(CHARS)
+const fromBase62 = getSeriesDecoder(CHARS)
+
 module.exports = {
   fromInt: toBase62,
   getIntEncoder,
   getSeriesDecoder,
+  toInt: fromBase62,
 }

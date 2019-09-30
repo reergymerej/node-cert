@@ -1,5 +1,5 @@
 const getUrlBll = require('./url')
-const { fromInt } = require('./id')
+const { fromInt, toInt } = require('./id')
 
 describe('URL BLL', () => {
   describe('saving a url', () => {
@@ -10,7 +10,7 @@ describe('URL BLL', () => {
         const urlDAO = {
           saveNewUrl: jest.fn(() => error),
         }
-        const urlBll = getUrlBll(urlDAO, fromInt)
+        const urlBll = getUrlBll({ urlDAO, fromInt })
 
         // act
         const url = 'http://foo.com'
@@ -33,7 +33,7 @@ describe('URL BLL', () => {
         const urlDAO = {
           saveNewUrl: jest.fn((obj) => ({ ...obj, id })),
         }
-        const urlBll = getUrlBll(urlDAO, fromInt)
+        const urlBll = getUrlBll({ urlDAO, fromInt })
 
         // act
         const result = await urlBll.saveNew(url)
@@ -52,6 +52,22 @@ describe('URL BLL', () => {
   })
 
   describe('looking up a url', () => {
+    it('should convert the id to an int', async () => {
+      // arrange
+      const int = 1200
+      const id = fromInt(int)
+      const urlDAO = {
+        byId: jest.fn(() => ({id: int})),
+      }
+      const urlBll = getUrlBll({ urlDAO, fromInt, toInt })
+
+      // act
+      const result = await urlBll.find(id)
+
+      // assert
+      expect(urlDAO.byId).toHaveBeenCalledWith(int)
+    })
+
     describe('if it fails', () => {
       it('should return an error', async () => {
         // arrange
@@ -59,7 +75,7 @@ describe('URL BLL', () => {
         const urlDAO = {
           byId: jest.fn(() => error),
         }
-        const urlBll = getUrlBll(urlDAO, fromInt)
+        const urlBll = getUrlBll({ urlDAO, fromInt, toInt })
 
         // act
         const id = 'bongo'
@@ -85,7 +101,7 @@ describe('URL BLL', () => {
             id: int,
           })),
         }
-        const urlBll = getUrlBll(urlDAO, fromInt)
+        const urlBll = getUrlBll({ urlDAO, fromInt, toInt })
 
         // act
         const result = await urlBll.find(id)
