@@ -1,5 +1,5 @@
 const getUrlBll = require('./url')
-const { fromInt, toInt } = require('./id')
+const { encode, decode } = require('./id')
 
 describe('URL BLL', () => {
   describe('saving a url', () => {
@@ -10,7 +10,7 @@ describe('URL BLL', () => {
         const urlDAO = {
           saveNewUrl: jest.fn(() => error),
         }
-        const urlBll = getUrlBll({ urlDAO, fromInt })
+        const urlBll = getUrlBll({ urlDAO, encode })
 
         // act
         const url = 'http://foo.com'
@@ -33,7 +33,7 @@ describe('URL BLL', () => {
         const urlDAO = {
           saveNewUrl: jest.fn((obj) => ({ ...obj, id })),
         }
-        const urlBll = getUrlBll({ urlDAO, fromInt })
+        const urlBll = getUrlBll({ urlDAO, encode })
 
         // act
         const result = await urlBll.saveNew(url)
@@ -45,7 +45,7 @@ describe('URL BLL', () => {
         // Test that the result is the DAL response with the converted id.
         expect(result).toEqual({
           ...urlObject,
-          id: fromInt(id),
+          id: encode(id),
         })
       })
     })
@@ -55,11 +55,11 @@ describe('URL BLL', () => {
     it('should convert the id to an int', async () => {
       // arrange
       const int = 1200
-      const id = fromInt(int)
+      const id = encode(int)
       const urlDAO = {
         byId: jest.fn(() => ({id: int})),
       }
-      const urlBll = getUrlBll({ urlDAO, fromInt, toInt })
+      const urlBll = getUrlBll({ urlDAO, encode, decode })
 
       // act
       const result = await urlBll.find(id)
@@ -75,7 +75,7 @@ describe('URL BLL', () => {
         const urlDAO = {
           byId: jest.fn(() => error),
         }
-        const urlBll = getUrlBll({ urlDAO, fromInt, toInt })
+        const urlBll = getUrlBll({ urlDAO, encode, decode })
 
         // act
         const id = 'bongo'
@@ -91,7 +91,7 @@ describe('URL BLL', () => {
       it('should return a url object', async () => {
         // arrange
         const int = 1200
-        const id = fromInt(int)
+        const id = encode(int)
         const urlObject = {
           url: 'http://boop.com',
         }
@@ -101,7 +101,7 @@ describe('URL BLL', () => {
             id: int,
           })),
         }
-        const urlBll = getUrlBll({ urlDAO, fromInt, toInt })
+        const urlBll = getUrlBll({ urlDAO, encode, decode })
 
         // act
         const result = await urlBll.find(id)

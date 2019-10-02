@@ -1,16 +1,16 @@
 const saveError = new Error('Unable to save')
 const lookupError = new Error('Unable to find')
 
-const getResultConverter = (fromInt) => (result) => ({
-  id: fromInt(result.id),
+const getResultConverter = (encode) => (result) => ({
+  id: encode(result.id),
   url: result.url,
 })
 
-module.exports = ({ urlDAO, fromInt, toInt }) => {
-  const resultConverter = getResultConverter(fromInt)
+module.exports = ({ urlDAO, encode, decode }) => {
+  const resultConverter = getResultConverter(encode)
   return {
     find: async (id) => {
-      const int = toInt(id)
+      const int = decode(id)
       const result = urlDAO.byId(int)
       const hasError = result instanceof Error
       return hasError
