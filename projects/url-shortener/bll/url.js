@@ -27,12 +27,11 @@ module.exports = ({ urlDAO, encode, decode }) => {
         result = await urlDAO.saveNewUrl(urlObject)
       } catch (error) {
         result = error
-      } finally {
-        const hasSaveError = result instanceof Error
-        return hasSaveError
-          ? saveError
-          : resultConverter(result)
       }
+      const hasSaveError = result instanceof Error
+      return hasSaveError
+        ? saveError
+        : resultConverter(result)
     },
   }
 }

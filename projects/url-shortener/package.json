@@ -9,12 +9,16 @@
   "author": "Jeremy Greer <jex.grizzle@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "babel-eslint": "^10.0.3",
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
     "nodemon": "^1.19.2",
     "supertest": "^4.0.2"
   },
   "dependencies": {
-    "custom-numeral-system": "^1.0.1"
+    "custom-numeral-system": "^1.0.1",
+    "pg": "^7.12.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.19.2"
   }
 }
