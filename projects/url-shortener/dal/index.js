@@ -4,12 +4,16 @@ module.exports = (sequelize) => {
     Url,
   ]
 
+  const toPlain = result => result.get({ plain: true })
+
   const saveNewUrl = async (urlObject) => {
     return await Url.create(urlObject)
-      .then((url) => {
-        const plain = url.get({ plain: true })
-        return plain
-      })
+      .then(toPlain)
+  }
+
+  const byId = async (id) => {
+    return await Url.findByPk(id)
+      .then(toPlain)
   }
 
   const tests_only_setup = async () => {
@@ -23,6 +27,7 @@ module.exports = (sequelize) => {
   }
 
   return {
+    byId,
     saveNewUrl,
     tests_only_setup,
     tests_only_truncate,

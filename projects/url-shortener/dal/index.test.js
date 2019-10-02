@@ -21,18 +21,18 @@ describe('DAL', () => {
     await api.tests_only_setup()
   })
 
-  describe('saveNewUrl', () => {
+  describe('saving and retrieving a new url', () => {
     describe('if it works', () => {
       it('should return the new object', async () => {
         const urlObject = {
           url: 'asdf',
         }
 
-        const result = await api.saveNewUrl(urlObject)
-        expect(result.url).toBe('asdf')
-        expect(result.id).toEqual(expect.any(Number))
-
-        // TODO: retrieve it now to verify
+        const saveResult = await api.saveNewUrl(urlObject)
+        expect(saveResult.url).toBe('asdf')
+        expect(saveResult.id).toEqual(expect.any(Number))
+        const findResult = await api.byId(saveResult.id)
+        expect(findResult).toEqual(saveResult)
       })
     })
   })
