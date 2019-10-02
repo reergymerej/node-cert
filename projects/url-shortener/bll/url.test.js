@@ -5,24 +5,32 @@ describe('URL BLL', () => {
   describe('saving a url', () => {
     describe('if it fails', () => {
       it('should return an error', async () => {
-        // arrange
         const error = new Error('low level DAL error')
         const urlDAO = {
           saveNewUrl: jest.fn(() => error),
         }
         const urlBll = getUrlBll({ urlDAO, encode })
-
-        // act
-        const url = 'http://foo.com'
-        const result = await urlBll.saveNew(url)
-
-        // assert
+        const result = await urlBll.saveNew()
         const saveError = new Error('Unable to save')
         expect(result).toEqual(saveError)
       })
     })
 
     describe('if it works', () => {
+      it('should call the correct urlBll method with an object', async () => {
+        const id = 10
+        const url = 'http://foo.com'
+        const urlObject = {
+          url,
+        }
+        const urlDAO = {
+          saveNewUrl: jest.fn((obj) => ({ ...obj, id })),
+        }
+        const urlBll = getUrlBll({ urlDAO, encode })
+        await urlBll.saveNew(url)
+        expect(urlDAO.saveNewUrl).toHaveBeenCalledWith(urlObject)
+      })
+
       it('should return a url object', async () => {
         // arrange
         const id = 10
@@ -62,7 +70,7 @@ describe('URL BLL', () => {
       const urlBll = getUrlBll({ urlDAO, encode, decode })
 
       // act
-      const result = await urlBll.find(id)
+      await urlBll.find(id)
 
       // assert
       expect(urlDAO.byId).toHaveBeenCalledWith(int)

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 
 let connection
 
-module.exports = (config) => {
+module.exports = (config, sequelizeOptions) => {
   const {
     db,
     password,
@@ -17,6 +17,7 @@ module.exports = (config) => {
       {
         host: 'localhost',
         dialect: 'postgres',
+        ...sequelizeOptions,
       }
     )
   } else {
