@@ -6,33 +6,35 @@ const getResultConverter = (encode) => (result) => ({
   url: result.url,
 })
 
-module.exports = ({ urlDalApi, encode, decode }) => {
-  const convertedResultOrNiceError = (niceError) => {
-    const resultConverter = getResultConverter(encode)
-    return async (fn) => {
-      try {
-        const result = await fn()
-        return resultConverter(result)
-      } catch (error) {
-        throw niceError
-      }
-    }
+const successHandlerOrError = (onSuccess) => (standardError) => (fn) => {
+  try {
+    return onSuccess(fn())
+  } catch (error) {
+    throw standardError
   }
+}
+
+
+module.exports = ({ urlDalApi, encode, decode }) => {
+  const resultConverter = getResultConverter(encode)
+  const convertOrError = successHandlerOrError(resultConverter)
+  const find = convertOrError(lookupError)
+  const save = convertOrError(saveError)
 
   return {
     find: async (id) => {
-      return await convertedResultOrNiceError(lookupError)(async () => {
+      return await find(() => {
         const int = decode(id)
-        return await urlDalApi.find(int)
+        return urlDalApi.find(int)
       })
     },
 
     saveNew: async (url) => {
-      return await convertedResultOrNiceError(saveError)(async () => {
+      return await save(() => {
         const urlObject = {
           url,
         }
-        return await urlDalApi.save(urlObject)
+        return urlDalApi.save(urlObject)
       })
     },
   }
