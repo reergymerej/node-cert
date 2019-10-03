@@ -1,3 +1,4 @@
+// Establishes singleton connection to DB automatically based on env.
 const Sequelize = require('sequelize')
 const {
   DB: db,
