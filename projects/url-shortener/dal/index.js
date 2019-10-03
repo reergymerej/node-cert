@@ -1,20 +1,11 @@
+const url = require('./url')
+
 module.exports = (sequelize) => {
-  const Url = require('./Url')(sequelize)
+  const urlApi = url(sequelize)
+
   const models = [
-    Url,
+    ...urlApi.models,
   ]
-
-  const toPlain = result => result.get({ plain: true })
-
-  const saveNewUrl = async (urlObject) => {
-    return await Url.create(urlObject)
-      .then(toPlain)
-  }
-
-  const byId = async (id) => {
-    return await Url.findByPk(id)
-      .then(toPlain)
-  }
 
   const tests_only_setup = async () => {
     const promises = models.map((Model) => Model.sync({ force: true }))
@@ -27,8 +18,7 @@ module.exports = (sequelize) => {
   }
 
   return {
-    byId,
-    saveNewUrl,
+    url: urlApi,
     tests_only_setup,
     tests_only_truncate,
   }

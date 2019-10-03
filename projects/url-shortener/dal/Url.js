@@ -1,24 +1,21 @@
-const Sequelize = require('sequelize')
-const { Model } = Sequelize
-
-const fields = {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  url: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-}
+const toPlain = result => result.get({ plain: true })
 
 module.exports = (sequelize) => {
-  class Url extends Model {}
-  Url.init(fields, {
-    sequelize,
-    modelName: 'url',
-  })
+  const Url = require('./models/Url')(sequelize)
 
-  return Url
+  const saveNewUrl = async (urlObject) => {
+    return await Url.create(urlObject)
+      .then(toPlain)
+  }
+
+  const byId = async (id) => {
+    return await Url.findByPk(id)
+      .then(toPlain)
+  }
+
+  return {
+    find: byId,
+    models: [Url],
+    save: saveNewUrl,
+  }
 }

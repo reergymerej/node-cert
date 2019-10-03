@@ -28,10 +28,10 @@ describe('DAL', () => {
           url: 'asdf',
         }
 
-        const saveResult = await api.saveNewUrl(urlObject)
+        const saveResult = await api.url.save(urlObject)
         expect(saveResult.url).toBe('asdf')
         expect(saveResult.id).toEqual(expect.any(Number))
-        const findResult = await api.byId(saveResult.id)
+        const findResult = await api.url.find(saveResult.id)
         expect(findResult).toEqual(saveResult)
       })
     })

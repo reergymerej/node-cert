@@ -6,16 +6,22 @@ const getResultConverter = (encode) => (result) => ({
   url: result.url,
 })
 
-module.exports = ({ urlDAO, encode, decode }) => {
+module.exports = ({ urlDalApi, encode, decode }) => {
   const resultConverter = getResultConverter(encode)
   return {
     find: async (id) => {
-      const int = decode(id)
-      const result = urlDAO.byId(int)
+      let result
+      try {
+        const int = decode(id)
+        result = urlDalApi.find(int)
+      } catch (error) {
+        result = error
+      }
       const hasError = result instanceof Error
-      return hasError
-        ? lookupError
-        : resultConverter(result)
+      if (hasError) {
+        throw lookupError
+      }
+      return resultConverter(result)
     },
 
     saveNew: async (url) => {
@@ -24,14 +30,16 @@ module.exports = ({ urlDAO, encode, decode }) => {
         const urlObject = {
           url,
         }
-        result = await urlDAO.saveNewUrl(urlObject)
+        // TODO: Check if the DAL actually throws or uses .catch or .reject.
+        result = await urlDalApi.save(urlObject)
       } catch (error) {
         result = error
       }
       const hasSaveError = result instanceof Error
-      return hasSaveError
-        ? saveError
-        : resultConverter(result)
+      if (hasSaveError) {
+        throw saveError
+      }
+      return resultConverter(result)
     },
   }
 }
