@@ -32,3 +32,12 @@ Data Access Layer - knows how to build and run queries, data models
 
   We don't have to store the converted id in the db.  Just store the int and the
   BLL can do the translations for us.
+
+App
+  Application level concerns like which database we use, host, passwords, etc
+  are managed at the app level.  The app assembles its pieces (presentation,
+  bll, dal) given a context.  Presentation can talk to BLL (injection), BLL can
+  talk to DAL (injection).
+
+  Keeping the configuration in the app level allows us to change environments
+  for dev, prod, and testing.

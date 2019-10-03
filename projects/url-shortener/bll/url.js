@@ -6,14 +6,13 @@ const getResultConverter = (encode) => (result) => ({
   url: result.url,
 })
 
-const successHandlerOrError = (onSuccess) => (standardError) => (fn) => {
+const successHandlerOrError = (onSuccess) => (standardError) => async (fn) => {
   try {
-    return onSuccess(fn())
+    return onSuccess(await fn())
   } catch (error) {
     throw standardError
   }
 }
-
 
 module.exports = ({ urlDalApi, encode, decode }) => {
   const resultConverter = getResultConverter(encode)

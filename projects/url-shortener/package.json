@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "./bin/start.js",
+    "dev": "nodemon --inspect bin/start.js"
   },
   "author": "Jeremy Greer <jex.grizzle@gmail.com>",
   "license": "ISC",

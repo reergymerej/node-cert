@@ -21,7 +21,7 @@ module.exports = (config, sequelizeOptions) => {
       }
     )
   } else {
-    console.log('connection open')
+    console.log('connection already open')
   }
 
   return connection

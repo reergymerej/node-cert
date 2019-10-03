@@ -1,4 +1,6 @@
-const toPlain = result => result.get({ plain: true })
+const toPlain = result => {
+  return result && result.get({ plain: true })
+}
 
 module.exports = (sequelize) => {
   const Url = require('./models/Url')(sequelize)
