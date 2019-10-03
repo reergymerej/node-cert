@@ -1,27 +1,25 @@
 const Sequelize = require('sequelize')
+const {
+  DB: db,
+  DB_PASSWORD: password,
+  DB_USER: user,
+  HOST: host,
+} = process.env
 
 let connection
 
-module.exports = (config, sequelizeOptions) => {
-  const {
-    db,
-    password,
-    user,
-  } = config
-
+module.exports = () => {
   if (!connection) {
     connection = new Sequelize(
       db,
       user,
       password,
       {
-        host: 'localhost',
+        host,
         dialect: 'postgres',
-        ...sequelizeOptions,
+        logging: false,
       }
     )
-  } else {
-    console.log('connection already open')
   }
 
   return connection

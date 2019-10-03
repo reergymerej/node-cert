@@ -52,3 +52,7 @@ How can we ensure we're writing unit tests and integration separately?
   https://www.petrikainulainen.net/programming/testing/writing-tests-for-data-access-code-unit-tests-are-waste/
 
 Don't unit test DAL.  Use integration tests.
+
+
+I don't want to specify the connection specifics from the app.  The DAL should
+connect automatically based on environment.
