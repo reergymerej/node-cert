@@ -7,39 +7,33 @@ const getResultConverter = (encode) => (result) => ({
 })
 
 module.exports = ({ urlDalApi, encode, decode }) => {
-  const resultConverter = getResultConverter(encode)
+  const convertedResultOrNiceError = (niceError) => {
+    const resultConverter = getResultConverter(encode)
+    return async (fn) => {
+      try {
+        const result = await fn()
+        return resultConverter(result)
+      } catch (error) {
+        throw niceError
+      }
+    }
+  }
+
   return {
     find: async (id) => {
-      let result
-      try {
+      return await convertedResultOrNiceError(lookupError)(async () => {
         const int = decode(id)
-        result = urlDalApi.find(int)
-      } catch (error) {
-        result = error
-      }
-      const hasError = result instanceof Error
-      if (hasError) {
-        throw lookupError
-      }
-      return resultConverter(result)
+        return await urlDalApi.find(int)
+      })
     },
 
     saveNew: async (url) => {
-      let result
-      try {
+      return await convertedResultOrNiceError(saveError)(async () => {
         const urlObject = {
           url,
         }
-        // TODO: Check if the DAL actually throws or uses .catch or .reject.
-        result = await urlDalApi.save(urlObject)
-      } catch (error) {
-        result = error
-      }
-      const hasSaveError = result instanceof Error
-      if (hasSaveError) {
-        throw saveError
-      }
-      return resultConverter(result)
+        return await urlDalApi.save(urlObject)
+      })
     },
   }
 }

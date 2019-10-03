@@ -3,19 +3,19 @@ const toPlain = result => result.get({ plain: true })
 module.exports = (sequelize) => {
   const Url = require('./models/Url')(sequelize)
 
-  const saveNewUrl = async (urlObject) => {
+  const save = async (urlObject) => {
     return await Url.create(urlObject)
       .then(toPlain)
   }
 
-  const byId = async (id) => {
+  const find = async (id) => {
     return await Url.findByPk(id)
       .then(toPlain)
   }
 
   return {
-    find: byId,
+    find,
     models: [Url],
-    save: saveNewUrl,
+    save,
   }
 }
